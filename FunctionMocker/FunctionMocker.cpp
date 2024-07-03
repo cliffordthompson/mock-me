@@ -23,35 +23,35 @@
 #include "FunctionMocker.h"
 
 FunctionMocker::FunctionMocker(void* originalFuncPtr, void* mockFuncPtr) :
-	m_originalFuncPtr(static_cast<uint8_t*>(originalFuncPtr)),
-	m_mockFuncPtr(static_cast<uint8_t*>(mockFuncPtr)),
-	m_originalJmpOffsetPtr(reinterpret_cast<uint32_t*>(m_originalFuncPtr +1)),
-	m_mockJmpOffsetPtr(reinterpret_cast<uint32_t*>(m_mockFuncPtr + 1)),
-	m_originalJmpOffsetValue(*m_originalJmpOffsetPtr)
+    m_originalFuncPtr(static_cast<uint8_t*>(originalFuncPtr)),
+    m_mockFuncPtr(static_cast<uint8_t*>(mockFuncPtr)),
+    m_originalJmpOffsetPtr(reinterpret_cast<uint32_t*>(m_originalFuncPtr + 1)),
+    m_mockJmpOffsetPtr(reinterpret_cast<uint32_t*>(m_mockFuncPtr + 1)),
+    m_originalJmpOffsetValue(*m_originalJmpOffsetPtr)
 {
-	// Currently only supporting the E9 JMP instruction
-	assert(*m_originalFuncPtr == JMP_OPCODE);
-	assert(*m_mockFuncPtr == JMP_OPCODE);
+    // Currently only supporting the E9 JMP instruction
+    assert(*m_originalFuncPtr == JMP_OPCODE);
+    assert(*m_mockFuncPtr == JMP_OPCODE);
 
-	DWORD originalMemoryProtectionValue;
-	VirtualProtect(m_originalJmpOffsetPtr, JMP_ADDRESS_LENGTH, PAGE_EXECUTE_READWRITE, &originalMemoryProtectionValue);
+    DWORD originalMemoryProtectionValue;
+    VirtualProtect(m_originalJmpOffsetPtr, JMP_ADDRESS_LENGTH, PAGE_EXECUTE_READWRITE, &originalMemoryProtectionValue);
 
-	const uint32_t addressDifference = m_mockFuncPtr - m_originalFuncPtr;
-	*m_originalJmpOffsetPtr = *m_mockJmpOffsetPtr + addressDifference;
+    const uint32_t addressDifference = m_mockFuncPtr - m_originalFuncPtr;
+    *m_originalJmpOffsetPtr = *m_mockJmpOffsetPtr + addressDifference;
 
-	// Return the memory protection to its previous state
-	VirtualProtect(m_originalJmpOffsetPtr, JMP_ADDRESS_LENGTH, originalMemoryProtectionValue, &originalMemoryProtectionValue);
-	return;
+    // Return the memory protection to its previous state
+    VirtualProtect(m_originalJmpOffsetPtr, JMP_ADDRESS_LENGTH, originalMemoryProtectionValue, &originalMemoryProtectionValue);
+    return;
 }
 
 FunctionMocker::~FunctionMocker(void)
 {
-	DWORD originalMemoryProtectionValue;
-	VirtualProtect(m_originalJmpOffsetPtr, JMP_ADDRESS_LENGTH, PAGE_EXECUTE_READWRITE, &originalMemoryProtectionValue);
+    DWORD originalMemoryProtectionValue;
+    VirtualProtect(m_originalJmpOffsetPtr, JMP_ADDRESS_LENGTH, PAGE_EXECUTE_READWRITE, &originalMemoryProtectionValue);
 
-	*m_originalJmpOffsetPtr = m_originalJmpOffsetValue;
+    *m_originalJmpOffsetPtr = m_originalJmpOffsetValue;
 
-	// Return the memory protection to its previous state
-	VirtualProtect(m_originalJmpOffsetPtr, JMP_ADDRESS_LENGTH, originalMemoryProtectionValue, &originalMemoryProtectionValue);
-	return;
+    // Return the memory protection to its previous state
+    VirtualProtect(m_originalJmpOffsetPtr, JMP_ADDRESS_LENGTH, originalMemoryProtectionValue, &originalMemoryProtectionValue);
+    return;
 }

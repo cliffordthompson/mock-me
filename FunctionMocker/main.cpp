@@ -26,84 +26,84 @@
 
 void testFunc1(void)
 {
-	std::cout << "In " << __FUNCSIG__ << std::endl;
+    std::cout << "In " << __FUNCSIG__ << std::endl;
 }
 
 void mockFunc1(void)
 {
-	std::cout << "In " << __FUNCSIG__ << std::endl;
+    std::cout << "In " << __FUNCSIG__ << std::endl;
 }
 
 void mockFunc2(int param)
 {
-	std::cout << "In " << __FUNCSIG__ << std::endl;
+    std::cout << "In " << __FUNCSIG__ << std::endl;
 }
 
 int mockFunc3(void)
 {
-	std::cout << "In " << __FUNCSIG__ << std::endl;
-	return 99;
+    std::cout << "In " << __FUNCSIG__ << std::endl;
+    return 99;
 }
 
 void testFunc2(void)
 {
-	std::cout << "In " << __FUNCSIG__ << std::endl;
+    std::cout << "In " << __FUNCSIG__ << std::endl;
 }
 
 void testFunc3(int param)
 {
-	std::cout << "In " << __FUNCSIG__ << std::endl;
+    std::cout << "In " << __FUNCSIG__ << std::endl;
 }
 
 int testFunc4(void)
 {
-	std::cout << "In " << __FUNCSIG__ << std::endl;
-	return 42;
+    std::cout << "In " << __FUNCSIG__ << std::endl;
+    return 42;
 }
 
 int main()
 {
-	std::cout << "|------------- Testing basic function mocking -------------|" << std::endl;
-	testFunc1();
-	{
-		auto testFuncAddress = testFunc1;
-		auto mockFuncAddress = mockFunc1;
-		FunctionMocker mocker(testFuncAddress, mockFuncAddress);
-		testFunc1();
-	}
-	testFunc1();
+    std::cout << "|------------- Testing basic function mocking -------------|" << std::endl;
+    testFunc1();
+    {
+        auto testFuncAddress = testFunc1;
+        auto mockFuncAddress = mockFunc1;
+        FunctionMocker mocker(testFuncAddress, mockFuncAddress);
+        testFunc1();
+    }
+    testFunc1();
 
-	std::cout << "|----- Testing basic function mocking (ordering test) -----|" << std::endl;
-	testFunc2();
-	{
-		auto testFuncAddress = testFunc2;
-		auto mockFuncAddress = mockFunc1;
-		FunctionMocker mocker(testFuncAddress, mockFuncAddress);
-		testFunc2();
-	}
-	testFunc2();
+    std::cout << "|----- Testing basic function mocking (ordering test) -----|" << std::endl;
+    testFunc2();
+    {
+        auto testFuncAddress = testFunc2;
+        auto mockFuncAddress = mockFunc1;
+        FunctionMocker mocker(testFuncAddress, mockFuncAddress);
+        testFunc2();
+    }
+    testFunc2();
 
-	std::cout << "|------- Testing parameter passing function mocking -------|" << std::endl;
-	testFunc3(1);
-	{
-		auto testFuncAddress = testFunc3;
-		auto mockFuncAddress = mockFunc2;
-		FunctionMocker mocker(testFuncAddress, mockFuncAddress);
-		testFunc3(2);
-	}
-	testFunc3(3);
+    std::cout << "|------- Testing parameter passing function mocking -------|" << std::endl;
+    testFunc3(1);
+    {
+        auto testFuncAddress = testFunc3;
+        auto mockFuncAddress = mockFunc2;
+        FunctionMocker mocker(testFuncAddress, mockFuncAddress);
+        testFunc3(2);
+    }
+    testFunc3(3);
 
-	std::cout << "|--------- Testing return value function mocking ----------|" << std::endl;
-	int result = testFunc4();
-	std::cout << "Return of testFunc4(" << result << ")" << std::endl;
-	{
-		auto testFuncAddress = testFunc4;
-		auto mockFuncAddress = mockFunc3;
-		FunctionMocker mocker(testFuncAddress, mockFuncAddress);
-		result = testFunc4();
-		std::cout << "Return of mocked testFunc4(" << result << ")" << std::endl;
-	}
-	result = testFunc4();
-	std::cout << "Return of testFunc4(" << result << ")" << std::endl;
-	return 0;
+    std::cout << "|--------- Testing return value function mocking ----------|" << std::endl;
+    int result = testFunc4();
+    std::cout << "Return of testFunc4(" << result << ")" << std::endl;
+    {
+        auto testFuncAddress = testFunc4;
+        auto mockFuncAddress = mockFunc3;
+        FunctionMocker mocker(testFuncAddress, mockFuncAddress);
+        result = testFunc4();
+        std::cout << "Return of mocked testFunc4(" << result << ")" << std::endl;
+    }
+    result = testFunc4();
+    std::cout << "Return of testFunc4(" << result << ")" << std::endl;
+    return 0;
 }

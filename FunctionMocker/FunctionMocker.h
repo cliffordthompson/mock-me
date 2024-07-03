@@ -37,30 +37,30 @@
 class FunctionMocker
 {
 public:
-		FunctionMocker(void* originalFuncPtr, void* mockFuncPtr);
-		~FunctionMocker(void);
+    FunctionMocker(void* originalFuncPtr, void* mockFuncPtr);
+    ~FunctionMocker(void);
 
 private:
-	FunctionMocker(FunctionMocker&) = delete;
-	FunctionMocker(FunctionMocker&&) = delete;
-	FunctionMocker& operator=(const FunctionMocker&) = delete;
-	FunctionMocker& operator=(const FunctionMocker&&) = delete;
+    FunctionMocker(FunctionMocker&) = delete;
+    FunctionMocker(FunctionMocker&&) = delete;
+    FunctionMocker& operator=(const FunctionMocker&) = delete;
+    FunctionMocker& operator=(const FunctionMocker&&) = delete;
 
-	uint8_t* const m_originalFuncPtr;
-	uint8_t* const m_mockFuncPtr;
+    uint8_t* const m_originalFuncPtr;
+    uint8_t* const m_mockFuncPtr;
 
-	// For now, only the E9 JMP instruction:
-	// |--------------------------------|
-	// | E9 (1-byte) | offset (4-bytes) |
-	// |--------------------------------|
-	static const uint8_t JMP_OPCODE = 0xe9;
-	static const uint8_t JMP_ADDRESS_LENGTH = sizeof(uint32_t);
+    // For now, only the E9 JMP instruction:
+    // |--------------------------------|
+    // | E9 (1-byte) | offset (4-bytes) |
+    // |--------------------------------|
+    static const uint8_t JMP_OPCODE = 0xe9;
+    static const uint8_t JMP_ADDRESS_LENGTH = sizeof(uint32_t);
 
-	// Pointers to the offsets for the JMPO instruction
-	uint32_t* const m_originalJmpOffsetPtr;
-	uint32_t* const m_mockJmpOffsetPtr;
+    // Pointers to the offsets for the JMPO instruction
+    uint32_t* const m_originalJmpOffsetPtr;
+    uint32_t* const m_mockJmpOffsetPtr;
 
-	uint32_t m_originalJmpOffsetValue = { 0 };
+    uint32_t m_originalJmpOffsetValue = { 0 };
 };
 
 #endif _FUNCTIONMOCKER_H_
